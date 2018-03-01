@@ -3,6 +3,8 @@ package dp;
 import java.util.Arrays;
 
 /**
+ * todo:还没写完：https://www.kancloud.cn/digest/pieces-algorithm/163624
+ * 参考：http://blog.csdn.net/v_JULY_v/article/details/6110269
  * Created by kukuxiahuni on 2018/3/1.
  * 最长公共子序列：求解两个字符串的最长公共子序列，其中子序列不一定连续
  * 递归算法
