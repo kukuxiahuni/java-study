@@ -18,12 +18,14 @@ public class TCPEchoClientNonblocking {
         SocketChannel socketChannel = SocketChannel.open();
         socketChannel.configureBlocking(false);
 
-        if (!socketChannel.connect(new InetSocketAddress("127.0.0.1", 7))) {
-            while (socketChannel.finishConnect()) {
-                System.out.println(".");
+        if (!socketChannel.connect(new InetSocketAddress("127.0.0.1", 9999))) {
+            while (!socketChannel.finishConnect()) {
+                System.out.print(">>>>");
 
             }
         }
+
+        System.out.println();
 
         byte[] argument = "huangchuancong".getBytes();
 
@@ -45,7 +47,7 @@ public class TCPEchoClientNonblocking {
             }
 
             totalBytesRcvd += bytesRcvd;
-            System.out.println(".");
+            System.out.println("." + totalBytesRcvd);
         }
 
         System.out.println("Received: " + new String(readBuffer.array(), 0, totalBytesRcvd));

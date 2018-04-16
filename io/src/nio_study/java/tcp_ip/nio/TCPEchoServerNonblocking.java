@@ -5,6 +5,7 @@ import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
+import java.util.Iterator;
 
 /**
  * java-study
@@ -21,15 +22,46 @@ public class TCPEchoServerNonblocking {
         Selector selector = Selector.open();
 
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
-        serverSocketChannel.socket().bind(new InetSocketAddress(9999));
+        serverSocketChannel.socket().bind(new InetSocketAddress("127.0.0.1",9999));
 
         serverSocketChannel.configureBlocking(false);
 
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
 
-        TCPProtocol tcpProtocol;
+        TCPProtocol tcpProtocol = new EchoSelectorProtocol(BUFSIZE);
 
+        while (true) {
+
+            if (selector.select(TIMEOUT) == 0) {
+                System.out.print(".");
+                continue;
+            }
+
+            Iterator<SelectionKey> keyIterator = selector.selectedKeys().iterator();
+
+            while (keyIterator.hasNext()) {
+                SelectionKey key = keyIterator.next();
+
+                if (key.isAcceptable()) {
+                    tcpProtocol.handlerAccept(key);
+                }
+
+                if (key.isReadable()) {
+                    tcpProtocol.handlerRead(key);
+
+                }
+
+                if (key.isValid() && key.isWritable()) {
+                    tcpProtocol.handlerWrite(key);
+                }
+
+                keyIterator.remove();
+            }
+
+
+
+        }
 
 
     }

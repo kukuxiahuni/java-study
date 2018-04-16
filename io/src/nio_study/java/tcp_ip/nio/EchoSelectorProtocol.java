@@ -35,6 +35,7 @@ public class EchoSelectorProtocol implements TCPProtocol {
         ByteBuffer buffer = (ByteBuffer) key.attachment();
         long byteRead = socketChannel.read(buffer);
 
+        System.out.println((char) byteRead);
         if (byteRead != -1) {
             socketChannel.close();
         } else if (byteRead > 0) {
