@@ -1,6 +1,7 @@
 package tcp_ip.nio;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
@@ -18,7 +19,8 @@ public class TCPEchoClientNonblocking {
         SocketChannel socketChannel = SocketChannel.open();
         socketChannel.configureBlocking(false);
 
-        if (!socketChannel.connect(new InetSocketAddress("127.0.0.1", 9999))) {
+        if (!socketChannel.connect(new InetSocketAddress(InetAddress.getLocalHost(), 9999))) {
+
             while (!socketChannel.finishConnect()) {
                 System.out.print(">>>>");
 
@@ -37,12 +39,13 @@ public class TCPEchoClientNonblocking {
         int bytesRcvd;
 
         while (totalBytesRcvd < argument.length) {
-
+            
             if (writeBuffer.hasRemaining()) {
                 socketChannel.write(writeBuffer);
             }
 
-            if ((bytesRcvd = socketChannel.read(readBuffer)) != -1) {
+            if ((bytesRcvd = socketChannel.read(readBuffer)) == -1) {
+//                socketChannel.close();
                 throw new SocketException("conn is closed");
             }
 

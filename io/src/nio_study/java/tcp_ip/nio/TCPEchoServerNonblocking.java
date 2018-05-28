@@ -15,17 +15,16 @@ import java.util.Iterator;
 public class TCPEchoServerNonblocking {
 
     private final static int BUFSIZE = 256;
-    private final static int TIMEOUT = 3000;
+    private final static int TIMEOUT = 30;
 
     public static void main(String[] args) throws IOException {
 
         Selector selector = Selector.open();
 
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
-        serverSocketChannel.socket().bind(new InetSocketAddress("127.0.0.1",9999));
+        serverSocketChannel.socket().bind(new InetSocketAddress(9999));
 
         serverSocketChannel.configureBlocking(false);
-
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
 

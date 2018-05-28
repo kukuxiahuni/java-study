@@ -1,5 +1,6 @@
 package tcp_ip.nio;
 
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
@@ -19,7 +20,6 @@ public class EchoSelectorProtocol implements TCPProtocol {
         this.bufSize = bufSize;
     }
 
-    @Override
     public void handlerAccept(SelectionKey key) throws IOException {
 
         SocketChannel socketChannel = ((ServerSocketChannel) key.channel()).accept();
@@ -28,22 +28,23 @@ public class EchoSelectorProtocol implements TCPProtocol {
 
     }
 
-    @Override
     public void handlerRead(SelectionKey key) throws IOException {
 
         SocketChannel socketChannel = (SocketChannel) key.channel();
         ByteBuffer buffer = (ByteBuffer) key.attachment();
-        long byteRead = socketChannel.read(buffer);
+        int byteRead = socketChannel.read(buffer);
 
-        System.out.println((char) byteRead);
-        if (byteRead != -1) {
+        System.out.println(new String(buffer.array(), "utf-8"));
+        //如果底层信道关闭，则关闭
+        if (byteRead == -1) {
             socketChannel.close();
+
         } else if (byteRead > 0) {
-            key.interestOps(SelectionKey.OP_READ | SelectionKey.OP_WRITE);
+            //接收完成，标记为可写
+            key.interestOps(SelectionKey.OP_WRITE);
         }
     }
 
-    @Override
     public void handlerWrite(SelectionKey key) throws IOException {
 
         ByteBuffer buffer = (ByteBuffer) key.attachment();
