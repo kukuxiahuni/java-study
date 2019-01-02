@@ -3,7 +3,7 @@ package com.cache.study;
 public interface DataStore<K, V> {
 
     enum PutStatus {
-        PUT
+        PUT,NOOP
     }
 
     ValueHolder<V> get(K key);
