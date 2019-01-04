@@ -1,8 +1,8 @@
 package com.test.hystrix;
 
-import com.netflix.hystrix.HystrixCommand;
-import com.netflix.hystrix.HystrixCommandGroupKey;
-import com.netflix.hystrix.HystrixThreadPoolKey;
+import com.netflix.hystrix.*;
+import com.netflix.hystrix.strategy.concurrency.HystrixConcurrencyStrategyDefault;
+import com.sun.xml.internal.bind.v2.model.core.ID;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -48,10 +48,22 @@ public class HelloWorldHystrixCommand extends HystrixCommand<String> {
 
     /**
      * 降级方案
+     *
      * @return
      */
     @Override
     protected String getFallback() {
         return "哈哈fallback";
+    }
+
+    @Override
+    protected String getCacheKey() {
+        return super.getCacheKey();
+    }
+
+    public final void flushCache() {
+        HystrixRequestCache.getInstance(HystrixCommandKey.Factory.asKey("ke"),
+                HystrixConcurrencyStrategyDefault.getInstance()).clear(String.valueOf(name));
+
     }
 }
