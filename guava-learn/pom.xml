@@ -22,6 +22,13 @@
             <artifactId>hystrix-core</artifactId>
             <version>1.5.8</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/io.reactivex.rxjava2/rxjava -->
+        <dependency>
+            <groupId>io.reactivex.rxjava2</groupId>
+            <artifactId>rxjava</artifactId>
+            <version>2.2.2</version>
+        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
