@@ -42,4 +42,47 @@ public class RxJavaDemo {
         observable.subscribe(subscriber);
 
     }
+
+    @Test
+    public void justTest() {
+
+        /**
+         * 最多10个元素
+         */
+        Observable.just(1, 2, 3).subscribe(new Subscriber<Integer>() {
+            public void onCompleted() {
+
+            }
+
+            public void onError(Throwable e) {
+
+            }
+
+            public void onNext(Integer integer) {
+                System.out.println(integer);
+            }
+        });
+
+    }
+
+    @Test
+    public void testArray() {
+
+        Integer[] array = {1, 2, 3, 45, 6, 7, 7, 9, 10, 11, 12};
+
+        Observable.from(array).subscribe(new Subscriber<Integer>() {
+            public void onCompleted() {
+                System.out.println("done");
+            }
+
+            public void onError(Throwable e) {
+
+            }
+
+            public void onNext(Integer integer) {
+                System.out.println(integer);
+            }
+
+        });
+    }
 }
