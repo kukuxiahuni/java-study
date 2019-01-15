@@ -9,6 +9,7 @@ import rx.Subscriber;
  * @description:
  * @author: kukuxiahuni
  * @create: 2019-01-02 18:56
+ * 这个不是rxJava2的API，可能是1的，来自于 Hystrix中的rx
  **/
 public class RxJavaDemo {
 
@@ -63,6 +64,8 @@ public class RxJavaDemo {
             }
         });
 
+
+
     }
 
     @Test
@@ -83,6 +86,16 @@ public class RxJavaDemo {
                 System.out.println(integer);
             }
 
+        });
+    }
+
+    @Test
+    public void testCreate() {
+
+        Observable.create(new Observable.OnSubscribe<String>() {
+            public void call(Subscriber<? super String> subscriber) {
+
+            }
         });
     }
 }
