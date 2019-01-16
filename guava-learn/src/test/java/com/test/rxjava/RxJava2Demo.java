@@ -1,13 +1,15 @@
 package com.test.rxjava;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.Observer;
+import io.reactivex.*;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @program: java-study
@@ -219,18 +221,76 @@ public class RxJava2Demo {
         });
     }
 
+    /**
+     * 关键是这个buffer有什么卵用
+     */
     @Test
     public void testBuffer() {
 
         /**
          * count==skip时， skip会被忽略
          */
-        Observable.just(1, 2, 3, 4, 5, 6,7,8).buffer(2, 3).subscribe(integers -> {
+        Observable.just(1, 2, 3, 4, 5, 6, 7, 8).buffer(3, 2).subscribe(integers -> {
             LOGGER.info("------------------------");
             integers.forEach(
                     integer -> LOGGER.info("{}", integer)
             );
         });
+
+    }
+
+    @Test
+    public void timerTest() {
+        Observable.timer(3, TimeUnit.SECONDS)
+                .subscribe(t -> {
+                    System.out.println("a");
+                });
+    }
+
+    @Test
+    public void testSingle() {
+        Single.just(new Random().nextInt()).subscribe(new SingleObserver<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onSuccess(Integer integer) {
+                LOGGER.info("success int = {}", integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                LOGGER.error("error", e);
+            }
+        });
+
+        Single.just(new Random().nextInt(100)).subscribe(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) throws Exception {
+                System.out.println(integer);
+            }
+        });
+    }
+
+
+    @Test
+    public void testCompleteable() {
+        Completable.fromAction(() -> System.out.println("hello world")).subscribe();
+        Completable.fromAction(() -> System.out.println("hello world"))
+                .andThen(Observable.range(1, 100))
+                .subscribe(integer -> System.out.println(integer));
+
+    }
+
+    @Test
+    public void testScheduler() {
+        Observable.just(1, 3, 4).observeOn(Schedulers.newThread()).subscribe(System.out::println);
+    }
+
+
+    public void lock() {
 
     }
 
