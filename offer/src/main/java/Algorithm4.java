@@ -1,5 +1,3 @@
-package PACKAGE_NAME;
-
 /**
  * @program: java-study
  * @description:
