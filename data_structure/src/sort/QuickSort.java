@@ -60,7 +60,7 @@ public class QuickSort {
 			//设置标志位
 			int provit = a[begin];
 			
-			//一趟排序
+			//一趟排序,实现 哨兵左侧的数值都比哨兵小；哨兵右侧的数值都比哨兵大
 			while(i < j){
 				//从右向左查找比provit小的位置
 				while(i < j && provit < a[j]){
