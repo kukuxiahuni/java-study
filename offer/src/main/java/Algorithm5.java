@@ -1,3 +1,4 @@
+
 public class Algorithm5 {
 
     public static void main(String[] args) {
@@ -26,29 +27,27 @@ public class Algorithm5 {
         }
 
 
-
     }
 
     public int findMin(int[] nums) {
         // write your code here
 
-        if (nums == null || nums.length == 0){
+        if (nums == null || nums.length == 0) {
             throw new IllegalArgumentException();
         }
 
-        if (nums.length==1){
+        if (nums.length == 1) {
             return nums[1];
         }
 
 
-
         int min = 0, end = nums.length - 1;
 
-        while(min < end) {
+        while (min < end) {
             int middle = min + ((end - min) >> 1);
 
             if (nums[middle] > nums[min] && nums[middle] > nums[end]) {
-                min = middle+1;
+                min = middle + 1;
             } else {
                 end = middle;
             }
@@ -58,7 +57,6 @@ public class Algorithm5 {
         return nums[min];
 
     }
-
 
 
 }
