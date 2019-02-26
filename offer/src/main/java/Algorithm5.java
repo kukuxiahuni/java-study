@@ -1,73 +1,62 @@
-import java.util.Arrays;
-import java.util.Comparator;
 
-/**
- * @program: java-study
- * @className: Algorithm5
- * @description: TODO
- * @author: kukuxiahuni
- * @create: 2019-02-19 10:09
- * @version: v1.0
- **/
 public class Algorithm5 {
-    /**
-     * @param nums: n non-negative integer array
-     * @return: A string
-     */
-    public String minNumber(int[] nums) {
+
+    public static void main(String[] args) {
+        int[] nums = {1, 2, 4, 3, 5, 5, 7, 6};
+
+
+        //1. 数字与下标是不是一致；
+        //2. 一致：判断数字与下一个数字是不是相等，若相等，则返回
+        //3. 不一致：进行数字交换
+
+        for (int i = 0; i < nums.length; ++i) {
+
+            while (i != nums[i]) {
+
+                if (nums[i] == nums[nums[i]]) {
+                    System.out.println(nums[i]);
+                    return;
+                }
+                //3.  不一致，进行数值交换
+                int tmp = nums[i];
+                nums[i] = nums[tmp];
+                nums[tmp] = tmp;
+
+            }
+
+        }
+
+
+    }
+
+    public int findMin(int[] nums) {
         // write your code here
 
         if (nums == null || nums.length == 0) {
-            return "0";
+            throw new IllegalArgumentException();
         }
 
-        //1. 搞字符串数组
-        String[] strArray = new String[nums.length];
-        for (int i = 0; i < nums.length; ++i) {
-            strArray[i] = String.valueOf(nums[i]);
-        }
-        //2. 字符串数组排序
-        Arrays.sort(strArray, new Com());
-
-        //3. 输出字符串
-        //3.1 拼接字符串
-        String ans = "";
-        for (int i = 0 ; i <= strArray.length - 1; ++i) {
-            ans = ans.concat(strArray[i]);
+        if (nums.length == 1) {
+            return nums[1];
         }
 
-        //3.2 找到字符不为0的位置
-        int index = 0;
-        while (index < strArray.length && ans.charAt(index) == '0') {
-            ++index;
+
+        int min = 0, end = nums.length - 1;
+
+        while (min < end) {
+            int middle = min + ((end - min) >> 1);
+
+            if (nums[middle] > nums[min] && nums[middle] > nums[end]) {
+                min = middle + 1;
+            } else {
+                end = middle;
+            }
+
         }
 
-        if (index == strArray.length) {
-            return "0";
-        }
-
-        return ans.substring(index);
+        return nums[min];
 
     }
 
-    public static void main(String[] args) {
-        Algorithm5 algorithm5 = new Algorithm5();
 
-        int[] nums = {3, 32, 321};
-        System.out.println(algorithm5.minNumber(nums));
-    }
-
-
-}
-
-class Com implements Comparator<String> {
-    @Override
-    public int compare(String a, String b) {
-
-        String ab = a.concat(b);
-        String ba = b.concat(a);
-
-        return ab.compareTo(ba);
-
-    }
 }

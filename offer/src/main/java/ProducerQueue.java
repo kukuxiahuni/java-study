@@ -1,3 +1,4 @@
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.Condition;
@@ -16,11 +17,13 @@ public class ProducerQueue<T> {
 
     private final T[] items;
     private final int size;
-    private int tail, head, count;
+    private volatile int tail, head, count;
 
     private final Lock lock = new ReentrantLock();
-    private Condition full = lock.newCondition();
-    private Condition empty = lock.newCondition();
+    //写入信号量
+    private Condition notFull = lock.newCondition();
+    //读取信号量
+    private Condition notEmpty = lock.newCondition();
 
     private final static ExecutorService EXECUTOR_SERVICE = initExecutorPool();
 
@@ -42,16 +45,21 @@ public class ProducerQueue<T> {
 
         lock.lock();
         try {
-            while (count >= items.length) {
-                full.await();
+            while (count == items.length) {
+                notFull.await();
             }
-            System.out.println("写入： " + value);
-            items[tail++] = value;
-            ++count;
-            if (tail >= size) {
+
+            T[] array = this.items;
+            array[tail] = value;
+
+            if (++tail == items.length) {
                 tail = 0;
             }
-            empty.signalAll();
+
+            System.out.println("写入： " + value);
+            ++count;
+
+            notEmpty.signal();
 
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -71,16 +79,22 @@ public class ProducerQueue<T> {
             System.out.println("取出count=" + count);
 
             while (count == 0) {
-                empty.await();
+                notEmpty.await();
             }
 
-            T value = this.items[head++];
-            System.out.println("去除： " + value);
-            --count;
-            if (head >= size) {
+            T[] array = this.items;
+
+            T value = array[head];
+            array[head] = null;
+
+            if (++head == items.length) {
                 head = 0;
             }
-            full.signalAll();
+            count--;
+
+            System.out.println("去除： " + value);
+
+            notFull.signal();
             return value;
 
 
@@ -122,13 +136,13 @@ public class ProducerQueue<T> {
      */
     private final static class Producer implements Runnable {
 
-        ProducerQueue<Integer> producerQueue;
+        ArrayBlockingQueue<Integer> producerQueue;
 
         Random random = new Random(100);
 
         private volatile boolean flag = true;
 
-        public Producer(ProducerQueue<Integer> producerQueue) {
+        public Producer(ArrayBlockingQueue<Integer> producerQueue) {
             this.producerQueue = producerQueue;
         }
 
@@ -136,7 +150,7 @@ public class ProducerQueue<T> {
         public void run() {
 
             while (flag && !Thread.interrupted()) {
-                this.producerQueue.put(random.nextInt(100));
+                this.producerQueue.offer(random.nextInt(100));
             }
 
         }
@@ -152,12 +166,12 @@ public class ProducerQueue<T> {
      */
     private final static class Consumer implements Runnable {
 
-        ProducerQueue<Integer> producerQueue;
+        ArrayBlockingQueue<Integer> producerQueue;
 
 
         private volatile boolean flag = true;
 
-        public Consumer(ProducerQueue<Integer> producerQueue) {
+        public Consumer(ArrayBlockingQueue<Integer> producerQueue) {
             this.producerQueue = producerQueue;
         }
 
@@ -165,7 +179,15 @@ public class ProducerQueue<T> {
         public void run() {
 
             while (flag && !Thread.interrupted()) {
-                System.out.println("消费者： " + this.producerQueue.get());
+                Integer integer = null;
+                try {
+                    integer = this.producerQueue.take();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if (Objects.nonNull(integer)) {
+                    System.out.println("消费者： " + integer);
+                }
             }
 
         }
@@ -177,9 +199,9 @@ public class ProducerQueue<T> {
 
     public static void main(String[] args) {
 
-        ProducerQueue<Integer> producerQueue = new ProducerQueue<>(10);
+        ArrayBlockingQueue<Integer> producerQueue = new ArrayBlockingQueue<>(100);
 //        producerQueue.put(2);
-        EXECUTOR_SERVICE.execute(new Producer(producerQueue));
+//        EXECUTOR_SERVICE.execute(new Producer(producerQueue));
         EXECUTOR_SERVICE.execute(new Producer(producerQueue));
         EXECUTOR_SERVICE.execute(new Consumer(producerQueue));
 
