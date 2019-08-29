@@ -78,6 +78,7 @@ public class EightQueens {
 		q.trail(0);
 		
 	}
+
 	
 	
 	/**

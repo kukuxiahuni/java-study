@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * 项目名称：data_structure
  * 类名称：QuickSort
- * 类描述：
+ * 类描述： 参考：https://segmentfault.com/a/1190000004410119
  * 创建人：黄传聪
  * 创建时间：2014-3-15 下午10:35:22
  * 修改人：
