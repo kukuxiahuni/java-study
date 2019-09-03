@@ -1,5 +1,7 @@
 package com.java.study;
 
+import java.util.function.Predicate;
+
 /**
  * @program: java-study
  * @description:访问者模式. 不可变的对象结构和多变的算法结构
@@ -7,6 +9,13 @@ package com.java.study;
  * @create: 2019-01-04 17:16
  **/
 public class Visitor {
+
+    public void test() {
+        Predicate<Integer> predicate = a -> a > 5;
+        predicate.and(b -> b < 10);
+        boolean result = predicate.test(4);
+        System.out.println(result);
+    }
 
     public interface ComputerPartVisitor {
 
@@ -17,6 +26,12 @@ public class Visitor {
         void visit(Keyboard keyboard);
 
         void visit(Monitor monitor);
+    }
+
+    public interface ComputerPart {
+
+        void accept(ComputerPartVisitor visitor);
+
     }
 
     public class Computer implements ComputerPartVisitor {
@@ -89,12 +104,6 @@ public class Visitor {
         public void visit(Monitor monitor) {
 
         }
-    }
-
-    public interface ComputerPart {
-
-        void accept(ComputerPartVisitor visitor);
-
     }
 
 
