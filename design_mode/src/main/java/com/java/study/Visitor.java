@@ -1,6 +1,8 @@
 package com.java.study;
 
+import java.util.Arrays;
 import java.util.function.Predicate;
+import java.util.stream.IntStream;
 
 /**
  * @program: java-study
@@ -15,6 +17,9 @@ public class Visitor {
         predicate.and(b -> b < 10);
         boolean result = predicate.test(4);
         System.out.println(result);
+        String[] arrays = {"a", "b", "c"};
+        Arrays.stream(arrays).reduce("", (x, y) -> x + y);
+        IntStream.range(1, 2).forEach(System.out::println);
     }
 
     public interface ComputerPartVisitor {
@@ -35,72 +40,88 @@ public class Visitor {
     }
 
     public class Computer implements ComputerPartVisitor {
+        @Override
         public void visit(Computer computer) {
             System.out.println("Displaying Computer.");
         }
 
+        @Override
         public void visit(Mouse mouse) {
             System.out.println("Displaying Mouse.");
         }
 
+        @Override
         public void visit(Keyboard keyboard) {
             System.out.println("Displaying Keyboard.");
         }
 
+        @Override
         public void visit(Monitor monitor) {
             System.out.println("Displaying Monitor.");
         }
     }
 
     public class Mouse implements ComputerPartVisitor {
+        @Override
         public void visit(Computer computer) {
 
         }
 
+        @Override
         public void visit(Mouse mouse) {
 
         }
 
+        @Override
         public void visit(Keyboard keyboard) {
 
         }
 
+        @Override
         public void visit(Monitor monitor) {
 
         }
     }
 
     public class Keyboard implements ComputerPartVisitor {
+        @Override
         public void visit(Computer computer) {
 
         }
 
+        @Override
         public void visit(Mouse mouse) {
 
         }
 
+        @Override
         public void visit(Keyboard keyboard) {
 
         }
 
+        @Override
         public void visit(Monitor monitor) {
 
         }
     }
 
     public class Monitor implements ComputerPartVisitor {
+        @Override
         public void visit(Computer computer) {
 
         }
 
+        @Override
         public void visit(Mouse mouse) {
 
         }
 
+        @Override
         public void visit(Keyboard keyboard) {
 
         }
 
+        @Override
         public void visit(Monitor monitor) {
 
         }

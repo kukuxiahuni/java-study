@@ -25,7 +25,7 @@ public class Discount {
     public String getPrice(String product) {
         double price = calculatePrice(product);
         Discount.Code code = Discount.Code.values()[random.nextInt(Code.values().length)];
-        return String.format("%s:%.2f:%s", name);
+        return String.format("%s:%.2f:%s", code.name());
     }
 
     private double calculatePrice(String product) {
