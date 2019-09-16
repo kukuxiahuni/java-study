@@ -1,10 +1,12 @@
 package section3;
 
+import javax.swing.text.html.Option;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 
@@ -34,6 +36,7 @@ public class RunnerTest {
 
     public static String processFile(BufferedReaderProcessor processor) throws Exception {
         try (BufferedReader br = new BufferedReader(new FileReader("a.txt"))) {
+            Optional.of("");
             return processor.process(br);
         }
     }
